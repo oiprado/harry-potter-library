@@ -1,0 +1,56 @@
+<div class="container">
+   <div class="row">
+      <div class="col-md-12 clearfix">
+         <a routerLink="/home" style="float: left;" class="btn btn-link">
+            Volver a la pantalla principal
+         </a>
+      </div>
+   </div>
+</div>
+<div class="container">
+   <p-table [value]="_shoppingCartService._shoppingCart">
+      <ng-template pTemplate="header">
+         <tr>
+            <th></th>
+            <th>Identificación</th>
+            <th>Libro</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Total</th>
+         </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-book>
+         <tr>
+            <td><input type="button" value="Eliminar" (click)="removeItem(book)"></td>
+            <td>{{book.book.id}}</td>
+            <td><label style="font-weight: bolder;">{{ book.book.title }}</label></td>
+            <td>
+
+               <input type="number" [(ngModel)]="book.quantity" min="1" max="{{book.book.quantity}}"
+                  *ngIf="book.book.quantity > 0" (change)="changeQuantity(book)">
+
+               <label style="font-weight: bolder;" *ngIf="book.book.quantity == 0">** AGOTADO **</label>
+            </td>
+            <td>{{ book.book.price | currency: 'USD' }}</td>
+            <td>{{ (book.book.price * book.quantity) | currency: 'USD' }}</td>
+         </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+         <tr>
+            <td colspan="5" class="p-text-right" style="text-align: right;padding-right: 10px;font-weight: bolder;">
+               Totales</td>
+            <td style="font-weight: bolder;">{{_shoppingCartService.getTotal() | currency: 'USD'}}</td>
+         </tr>
+      </ng-template>
+   </p-table>
+</div>
+<div class="container">
+   <div class="clearfix">
+      <button style="float: left;" class="btn btn-secondary" (click)="cancel()"
+         [disabled]="!_shoppingCartService.hasBooks()">Cancelar la
+         compra</button>
+      <button style="float: right;" class="btn btn-success" (click)="commit()"
+         [disabled]="!_shoppingCartService.hasBooks()">Confirmar la
+         compra</button>
+   </div>
+</div>
